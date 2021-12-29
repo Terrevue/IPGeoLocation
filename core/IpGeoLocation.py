@@ -105,4 +105,13 @@ class IpGeoLocation:
                     'Organization':self.Organization, 'Region':self.Region, 
                     'Region Name':self.RegionName, 'Timezone':self.Timezone, 
                     'Zip':self.Zip, 'Google Maps':self.GoogleMapsLink
+                }
+    # Same as above but the dictionary names match the list names
+    def ToDictMatch(self):   
+        return {'Query':self.Query, 'IP':self.IP, 'ASN':self.ASN, 'City':self.City, 
+                    'Country':self.Country, 'CountryCode':self.CountryCode, 'ISP':self.ISP, 
+                    'Latitude':str(self.Latitude), 'Longtitude':str(self.Longtitude), 
+                    'Organization':self.Organization, 'Region':self.Region, 
+                    'RegionName':self.RegionName, 'Timezone':self.Timezone, 
+                    'Zip':self.Zip, 'GoogleMapsLink':self.GoogleMapsLink
                 } 

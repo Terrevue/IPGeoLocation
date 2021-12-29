@@ -27,6 +27,9 @@
 
 __author__ = 'maldevel'
 
+import traceback
+import sys
+
 import csv
 from xml.etree import ElementTree as etree
 from collections import OrderedDict
@@ -98,35 +101,42 @@ class FileExporter:
             return True
         except:
             return False
-        
-        
+               
     def __ExportToCSV(self, ipGeoLocObjs, filename):
         try:
             with open(filename, 'w', newline='') as csvfile:
-                writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-                writer.writerow(['Results', 'IPGeolocation'])
+                fieldnames = ['Query','IP','ASN','City','Country','CountryCode','ISP','Latitude','Longtitude','Organization','Region','RegionName','Timezone','Zip','GoogleMapsLink']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+                writer.writeheader()
+                
+                #writer.writerows(ipGeoLocObjs)
                 for ipGeoLocObj in ipGeoLocObjs:
                     if ipGeoLocObj:
-                        writer.writerow(['Target', ipGeoLocObj.Query])
-                        writer.writerow(['IP', ipGeoLocObj.IP])
-                        writer.writerow(['ASN', ipGeoLocObj.ASN])
-                        writer.writerow(['City', ipGeoLocObj.City])
-                        writer.writerow(['Country', ipGeoLocObj.Country])
-                        writer.writerow(['Country Code', ipGeoLocObj.CountryCode])
-                        writer.writerow(['ISP', ipGeoLocObj.ISP])
-                        writer.writerow(['Latitude', ipGeoLocObj.Latitude])
-                        writer.writerow(['Longtitude', ipGeoLocObj.Longtitude])
-                        writer.writerow(['Organization', ipGeoLocObj.Organization])
-                        writer.writerow(['Region', ipGeoLocObj.Region])
-                        writer.writerow(['Region Name', ipGeoLocObj.RegionName])
-                        writer.writerow(['Timezone', ipGeoLocObj.Timezone])
-                        writer.writerow(['Zip', ipGeoLocObj.Zip])
-                        writer.writerow(['Google Maps', ipGeoLocObj.GoogleMapsLink])
-                        writer.writerow([])
+                        
+                        ipGeoLocObj.ToDictMatch()
+                        
+                        writer.writerow({
+                            'Query': ipGeoLocObj.Query,
+                            'IP': ipGeoLocObj.IP,
+                            'ASN': ipGeoLocObj.ASN,
+                            'City': ipGeoLocObj.City,
+                            'Country': ipGeoLocObj.Country,
+                            'CountryCode': ipGeoLocObj.CountryCode,
+                            'ISP': ipGeoLocObj.ISP,
+                            'Latitude': ipGeoLocObj.Latitude,
+                            'Longtitude': ipGeoLocObj.Longtitude,
+                            'Organization': ipGeoLocObj.Organization,
+                            'Region': ipGeoLocObj.Region,
+                            'RegionName': ipGeoLocObj.RegionName,
+                            'Timezone': ipGeoLocObj.Timezone,
+                            'Zip': ipGeoLocObj.Zip,
+                            'GoogleMapsLink': ipGeoLocObj.GoogleMapsLink
+                        })
             return True
         except:
+            print(sys.exc_info()[2])
+            print(traceback.format_exc())
             return False
-        
     
     def __add_items(self, root, items):
         for name, text in items:
